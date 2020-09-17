@@ -1,6 +1,7 @@
 mod api;
 
 use actix_web::{get, HttpServer, App, HttpResponse, web};
+use env_logger::Env;
 use actix_web::middleware::Logger;
 use std::sync::Mutex;
 use api::{config,scoped_config};
@@ -39,9 +40,11 @@ async fn user_detail(path: web::Path<(u32,)>) -> HttpResponse {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    env_logger::from_env(Env::default().default_filter_or("info")).init();
     HttpServer::new(|| {
         App::new()
             .wrap(Logger::default())
+            .wrap(Logger::new("%a %{User-Agent}i"))
             .data(AppState {
                 app_name: String::from("This is a state value"),
                 counter: Mutex::new(0),
@@ -57,8 +60,8 @@ async fn main() -> std::io::Result<()> {
                     .service(index)
                     .service(show_users)
                     .service(user_detail),
-        ).default_service(web::route().to(|| HttpResponse::MethodNotAllowed()))
-    })
+        ).default_service(web::route().to(|| HttpResponse::NotFound()))
+    }).workers(4)
     .bind("127.0.0.1:8080")?
     .run()
     .await
