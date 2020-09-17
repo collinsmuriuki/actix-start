@@ -61,7 +61,7 @@ async fn main() -> std::io::Result<()> {
                     .service(show_users)
                     .service(user_detail),
         ).default_service(web::route().to(|| HttpResponse::NotFound()))
-    }).workers(4)
+    })
     .bind("127.0.0.1:8080")?
     .run()
     .await
