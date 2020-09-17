@@ -17,7 +17,7 @@ async fn main() -> std::io::Result<()> {
             web::scope("/users")
                 .service(show_users)
                 .service(user_detail),
-        )
+        ).default_service(web::route().to(|| HttpResponse::MethodNotAllowed()))
     })
     .bind("127.0.0.1:8080")?
     .run()
