@@ -1,32 +1,23 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get,HttpServer,App,HttpResponse,web};
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
+#[get("/show")]
+async fn show_users() -> HttpResponse {
+    HttpResponse::Ok().body("Show users")
 }
 
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
-}
-
-#[get("/{id}/{name}/test")]
-async fn test(web::Path((id, name)): web::Path<(u32, String)>) -> impl Responder {
-    format!("Hello {}! id:{}", name, id)
-}
-
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
+#[get("/show/{id}")]
+async fn user_detail(path: web::Path<(u32,)>) -> HttpResponse {
+    HttpResponse::Ok().body(format!("User detail: {}", path.into_inner().0))
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
-        App::new()
-            .service(hello)
-            .service(echo)
-            .service(test)
-            .route("/hey", web::get().to(manual_hello))
+        App::new().service(
+            web::scope("/users")
+                .service(show_users)
+                .service(user_detail),
+        )
     })
     .bind("127.0.0.1:8080")?
     .run()
