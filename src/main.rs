@@ -41,6 +41,7 @@ async fn main() -> std::io::Result<()> {
                 app_name: String::from("This is a state value"),
                 counter: Mutex::new(0),
             })
+            .service(state_change)
             .service(
                 web::scope("/users")
                     .service(index)
