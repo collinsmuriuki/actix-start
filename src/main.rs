@@ -1,6 +1,7 @@
 mod api;
 
 use actix_web::{get, HttpServer, App, HttpResponse, web};
+use actix_web::middleware::Logger;
 use std::sync::Mutex;
 use api::{config,scoped_config};
 
@@ -40,6 +41,7 @@ async fn user_detail(path: web::Path<(u32,)>) -> HttpResponse {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
+            .wrap(Logger::default())
             .data(AppState {
                 app_name: String::from("This is a state value"),
                 counter: Mutex::new(0),
