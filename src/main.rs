@@ -1,5 +1,8 @@
-use actix_web::{get,HttpServer,App,HttpResponse,web};
+mod api;
+
+use actix_web::{get, HttpServer, App, HttpResponse, web};
 use std::sync::Mutex;
+use api::{config,scoped_config};
 
 
 // This struct represents state
@@ -41,6 +44,11 @@ async fn main() -> std::io::Result<()> {
                 app_name: String::from("This is a state value"),
                 counter: Mutex::new(0),
             })
+            .configure(config)
+            .service(
+                web::scope("/api")
+                    .configure(scoped_config)
+            )
             .service(state_change)
             .service(
                 web::scope("/users")
