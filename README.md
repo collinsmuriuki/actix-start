@@ -8,7 +8,7 @@
 >
 > ## Observation on returning custom structs in the form of json objects
 > You have two options:
-> * Implement actix's `Responder` trait to your custom trait and simply return your type from the request handler --> Long way
+> * Implement actix's `Responder` trait to your custom type and simply return your type from the request handler --> Long way
 > * Derive the `Serialize` trait from `serde` and simply return `web::Json<YourStruct>` from the request handler --> Quick way
 
 ## Run Server
