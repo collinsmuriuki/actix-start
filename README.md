@@ -5,6 +5,11 @@
 > and web scope add some level of modularity I like. Logging implementation is also pretty neat.
 > 
 > Will continue to further explore axtix and attempt to use microservices like Redis with it and see how it holds up before I give Rocket a trial
+>
+> ## Observation on returning custom structs in the form of json objects
+> You have two options:
+> * Implement actix's `Responder` trait to your custom trait and simply return your type from the request handler --> Long way
+> * Derive the `Serialize` trait from `serde` and simply return `web::Json<YourStruct>` from the request handler --> Quick way
 
 ## Run Server
 
