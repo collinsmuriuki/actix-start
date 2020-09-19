@@ -4,7 +4,7 @@ use actix_web::{get, HttpServer, App, HttpResponse, web};
 use env_logger::Env;
 use actix_web::middleware::Logger;
 use std::sync::Mutex;
-use api::{config,scoped_config};
+use api::{config,scoped_config,test_config};
 
 
 // This struct represents state
@@ -53,6 +53,7 @@ async fn main() -> std::io::Result<()> {
             .service(
                 web::scope("/api")
                     .configure(scoped_config)
+                    .configure(test_config)
             )
             .service(state_change)
             .service(
